@@ -1,0 +1,260 @@
+/* Centered form styling */
+.centered-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+/* Custom style for navbar text spacing */
+.navbar-text {
+    margin-right: 0rem;
+}
+
+.nav-item.ml-3 {
+    margin-left: 1rem; /* Увеличение отступа между логином и кнопкой "Выйти" */
+}
+
+/* Additional custom styles */
+.navbar-brand {
+    font-weight: bold;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.nav-link:hover {
+    color: #f8f9fa !important; /* Lighter shade on hover */
+    background-color: rgba(255, 255, 255, 0.2); /* Light background on hover */
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.btn-outline-light {
+    border-color: white;
+    color: white;
+}
+
+.btn-outline-light:hover {
+    background-color: white;
+    color: #007bff; /* Change text color on hover */
+}
+
+.container.flex-grow-1 {
+    flex-grow: 1;
+}
+
+/* Footer styles */
+footer {
+    background-color: #007bff;
+    color: white;
+    margin-top: auto; /* Ensures footer stays at the bottom */
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer .fab {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+/* Modal styles */
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+#changePasswordModal .form-group {
+    margin-bottom: 15px;
+}
+
+#changePasswordModal .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+#changePasswordModal .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+/* Toast styles */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 200px;
+    z-index: 1050;
+}
+
+.toast .toast-header {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Error messages */
+.invalid-feedback {
+    display: none;
+}
+
+.is-invalid + .invalid-feedback {
+    display: block;
+}
+
+/* Flexbox container for the cards */
+.d-flex.flex-wrap.justify-content-center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.profile-card:hover, .bookings-card:hover, .settings-card:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.card-img-wrapper {
+    overflow: hidden;
+    height: 200px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.1);
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.card-text {
+    margin-bottom: 0.75rem;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.rating {
+    display: inline-flex; /* Inline flex to keep it on the same line as text */
+    align-items: center;
+    margin-left: 5px; /* Optional spacing between text and stars */
+}
+
+.checked {
+    color: orange;
+}
+
+.rating .fa-star {
+    margin-right: 3px;
+}
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.no-gutters > .col-6 {
+    padding-right: 1px;
+    padding-left: 1px;
+    padding-bottom: 1px;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.zoom-on-hover:hover {
+    transform: scale(1.05);
+}
+
+.carousel-item img {
+    max-height: 90vh;
+    max-width: 90vw;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    margin: auto;
+}
+
+/* Styles for image modal */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.image-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 110%;  /* Увеличиваем максимальную ширину */
+    max-height: 110%;  /* Увеличиваем максимальную высоту */
+}
+
+/* Custom styles for the "Забронировать" button */
+.custom-button {
+    padding: 15px 25px; /* Increase padding to make it thicker */
+    font-size: 1.25rem; /* Increase font size */
+    font-weight: bold; /* Make the font bold */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #007bff; /* Ensure it's the right blue color */
+    border: none; /* Remove any border */
+    transition: transform 0.2s ease-in-out; /* Add smooth transition for transform */
+}
+
+.custom-button:hover {
+    background-color: #0056b3; /* Slightly darker on hover */
+    transform: scale(1.05); /* Slightly increase size on hover */
+}
+
+/* Make sure these styles are not overridden by Bootstrap defaults */
+.custom-button.btn {
+    padding: 15px 25px !important;
+    font-size: 1.25rem !important;
+    font-weight: bold !important;
+    border-radius: 8px !important;
+    background-color: #007bff !important;
+    border: none !important;
+}

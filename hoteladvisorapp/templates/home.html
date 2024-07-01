@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Наши Отели</h1>
+        <div>
+            <!-- Кнопка для открытия модального окна фильтрации -->
+            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#filterModal">
+                Фильтр
+            </button>
+            <!-- Кнопка для открытия модального окна добавления отеля (только для staff) -->
+            {% if user.is_authenticated and user.is_staff %}
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addHotelModal">
+                Добавить отель
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Модальное окно для фильтрации -->
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="filterModalLabel">Фильтрация отелей</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Форма фильтрации -->
+                    <form method="get">
+                        <div class="form-group">
+                            {{ form.name.label_tag }}
+                            {{ form.name }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.location.label_tag }}
+                            {{ form.location }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.min_rating.label_tag }}
+                            {{ form.min_rating }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.max_price.label_tag }}
+                            {{ form.max_price }}
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Поиск</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления отеля -->
+    <div class="modal fade" id="addHotelModal" tabindex="-1" role="dialog" aria-labelledby="addHotelModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addHotelModalLabel">Добавить отель</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addHotelForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_name">Название</label>
+                            <input type="text" name="name" class="form-control" id="id_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_location">Расположение</label>
+                            <input type="text" name="location" class="form-control" id="id_location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_price_per_night">Цена за ночь</label>
+                            <input type="number" name="price_per_night" class="form-control" id="id_price_per_night" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_description">Описание</label>
+                            <textarea name="description" class="form-control" id="id_description" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_image">Изображение</label>
+                            <input type="file" name="image" class="form-control-file" id="id_image" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for hotel in hotels %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 position-relative">
+                <div class="card-img-wrapper">
+                    <img src="{{ hotel.image.url }}" class="card-img-top" alt="{{ hotel.name }}">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ hotel.name }}</h5>
+                    <p class="card-text"><strong>Расположение:</strong> {{ hotel.location }}</p>
+                    <p class="card-text"><strong>Рейтинг:</strong>
+                        <div class="rating">
+                            {% for i in hotel.rating|range_list %}
+                            <span class="fa fa-star checked"></span>
+                            {% endfor %}
+                            {% for i in 5|range_list %}
+                                {% if i >= hotel.rating %}
+                                    <span class="fa fa-star"></span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </p>
+                    <p class="card-text"><strong>Цена за ночь:</strong> ${{ hotel.price_per_night }}</p>
+                    <a href="{{ hotel.get_absolute_url }}" class="btn btn-primary">Подробнее</a>
+                    {% if user.is_authenticated and user.is_staff %}
+                    <button class="btn btn-danger mt-2 delete-hotel position-absolute" data-hotel-id="{{ hotel.id }}" style="bottom: 5px; right: 10px;">Удалить</button>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted">
+                    Добавлено: {{ hotel.created_at|date:"d M Y" }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('#addHotelForm').on('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: "{% url 'add_hotel' %}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    location.reload(); // Перезагрузка страницы для обновления списка отелей
+                } else {
+                    alert('Произошла ошибка при добавлении отеля');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Произошла ошибка при добавлении отеля');
+            }
+        });
+    });
+
+    $('.delete-hotel').on('click', function(event) {
+        event.preventDefault();
+        var hotelId = $(this).data('hotel-id');
+        var url = "{% url 'delete_hotel' 0 %}".replace('0', hotelId);
+
+        if (confirm('Вы уверены, что хотите удалить этот отель?')) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload(); // Перезагрузка страницы для обновления списка отелей
+                    } else {
+                        alert('Произошла ошибка при удалении отеля');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Произошла ошибка при удалении отеля');
+                }
+            });
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}О нас{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{% static 'about-us.jpg' %}" alt="About Us" class="img-fluid rounded">
+        </div>
+        <div class="col-md-6">
+            <h2>О нашей компании</h2>
+            <p>Добро пожаловать на Hotel Advisor! Мы – команда профессионалов, посвятившая себя тому, чтобы помогать вам находить лучшие отели по всему миру. Наша цель – предоставлять вам достоверную и актуальную информацию, чтобы ваше пребывание было комфортным и приятным.</p>
+            <p>С нашей помощью вы сможете найти отель, который идеально соответствует вашим требованиям, будь то бизнес-поездка или отдых с семьей. Мы собираем отзывы и рекомендации от настоящих путешественников, чтобы вы могли принять обоснованное решение.</p>
+            <h3>Наша миссия</h3>
+            <p>Мы стремимся к тому, чтобы ваш опыт путешествий был безупречным. Наша миссия – предоставлять честные и независимые советы, чтобы каждый мог найти свой идеальный отель.</p>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <h4>Почему выбирают нас?</h4>
+            <ul class="list-unstyled">
+                <li><i class="fas fa-check-circle"></i> Надежные отзывы</li>
+                <li><i class="fas fa-check-circle"></i> Широкий выбор отелей</li>
+                <li><i class="fas fa-check-circle"></i> Легкий поиск и бронирование</li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h4>Наши услуги</h4>
+            <ul class="list-unstyled">
+                <li><i class="fas fa-check-circle"></i> Консультации по выбору отеля</li>
+                <li><i class="fas fa-check-circle"></i> Поддержка 24/7</li>
+                <li><i class="fas fa-check-circle"></i> Лучшие предложения и скидки</li>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h4>Контактная информация</h4>
+            <p>Email: info@hoteladvisor.com</p>
+            <p>Телефон: +123 456 7890</p>
+            <div>
+                <a href="#" class="text-primary mr-2"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-primary mr-2"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-primary"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

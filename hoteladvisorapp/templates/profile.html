@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card profile-card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Профиль пользователя</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d M Y" }}</p>
+                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#editProfileModal">Редактировать профиль</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card bookings-card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Мои брони</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.bookings.all %}
+                        <div class="row">
+                            {% for booking in user.bookings.all %}
+                            <div class="col-md-6 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title d-flex align-items-center">
+                                            {{ booking.hotel.name }}
+                                            <div class="rating ml-3">
+                                                {% for i in booking.hotel.rating|range_list %}
+                                                <span class="fa fa-star checked"></span>
+                                                {% endfor %}
+                                                {% for i in 5|range_list %}
+                                                    {% if i >= booking.hotel.rating %}
+                                                        <span class="fa fa-star"></span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </h5>
+                                        <p class="card-text"><strong>Дата заезда:</strong> {{ booking.start_date|date:"d M Y" }}</p>
+                                        <p class="card-text"><strong>Дата отъезда:</strong> {{ booking.end_date|date:"d M Y" }}</p>
+                                    <form method="post" action="{% url 'cancel_booking' booking.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Отменить бронирование</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>У вас пока нет бронирований.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mt-4 settings-card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Настройки учетной записи</h5>
+                </div>
+                <div class="card-body">
+                    <p>Здесь вы можете изменить настройки вашей учетной записи.</p>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal">Изменить пароль</button>
+                    <a href="#" class="btn btn-primary">Настройки уведомлений</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для изменения пароля -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Изменение пароля</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="changePasswordForm" method="post" action="{% url 'change_password' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_old_password">Старый пароль</label>
+                        <input type="password" name="old_password" class="form-control" id="id_old_password" required>
+                        <div class="invalid-feedback" id="error_old_password"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_new_password1">Новый пароль</label>
+                        <input type="password" name="new_password1" class="form-control" id
+                        <input type="password" name="new_password1" class="form-control" id="id_new_password1" required>
+                        <div class="invalid-feedback" id="error_new_password1"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_new_password2">Подтвердите новый пароль</label>
+                        <input type="password" name="new_password2" class="form-control" id="id_new_password2" required>
+                        <div class="invalid-feedback" id="error_new_password2"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования профиля -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" role="dialog" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Редактирование профиля</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm" method="post" action="{% url 'edit_profile' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        <input type="email" name="email" class="form-control" id="id_email" value="{{ user.email }}" required>
+                        <div class="invalid-feedback" id="error_email"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Сообщение об успешной смене пароля -->
+<div class="toast" id="passwordChangeSuccess" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <strong class="mr-auto">Успех</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Закрыть">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        Ваш пароль был успешно обновлен.
+    </div>
+</div>
+
+<!-- Сообщение об ошибке -->
+<div class="toast" id="passwordChangeError" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+    <div class="toast-header">
+        <strong class="mr-auto">Ошибка</strong>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Закрыть">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        Произошла ошибка. Попробуйте еще раз.
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Установка CSRF токена для AJAX запросов
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+$(document).ready(function() {
+    $('#editProfileForm').on('submit', function(event) {
+        event.preventDefault(); // Предотвращение стандартного отправления формы
+        console.log('Submitting edit profile form via AJAX'); // Debug message
+        $.ajax({
+            url: "{% url 'edit_profile' %}",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function(response) {
+                console.log('AJAX response received', response); // Debug message
+                if (response.success) {
+                    $('#editProfileModal').modal('hide');
+                    location.reload(); // Перезагрузить страницу, чтобы отобразить обновления
+                } else {
+                    console.log('Form errors:', response.errors); // Debug message
+                    $('#editProfileForm .form-control').removeClass('is-invalid');
+                    $('.invalid-feedback').text('').hide();
+                    $.each(response.errors, function(field, errors) {
+                        $('#id_' + field).addClass('is-invalid');
+                        $('#error_' + field).text(errors.join(', ')).show();
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('AJAX error:', status, error);
+                $('#editProfileError').toast('show');
+            }
+        });
+    });
+
+    $('#editProfileModal').on('hidden.bs.modal', function () {
+        $('#editProfileForm .form-control').removeClass('is-invalid');
+        $('.invalid-feedback').text('').hide();
+    });
+});
+</script>
+{% endblock %}
